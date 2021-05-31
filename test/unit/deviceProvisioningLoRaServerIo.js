@@ -206,13 +206,13 @@ describe('Device provisioning API: Provision devices', function () {
         };
 
         it('should add the device to the devices list', function (done) {
-            request(options, function (error, response, body) {
+            request(options, function (error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 201);
                 setTimeout(function () {
-                    request(optionsGetDevice, function (err, resp, _) {
+                    request(optionsGetDevice, function (err, resp, body) {
                         should.not.exist(err);
-                        response.should.have.property('statusCode', 200);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 2);
                         body.should.have.property('devices');
                         body.devices.should.be.an('array');
