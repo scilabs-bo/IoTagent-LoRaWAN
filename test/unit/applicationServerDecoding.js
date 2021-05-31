@@ -62,7 +62,6 @@ describe('CBOR Attributes', function() {
 
     before(function(done) {
         readEnvVariables();
-        /* eslint-disable-next-line  standard/computed-property-even-spacing */
         async.series(
             [
                 async.apply(utils.deleteEntityCB, iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003'),
@@ -105,18 +104,17 @@ describe('CBOR Attributes', function() {
 
         it('should add the device to the devices list', function(done) {
             if (testMosquittoHost) {
-                /* eslint-disable-next-line  standard/computed-property-even-spacing */
                 options.json.devices[0].internal_attributes.lorawan.application_server.host = testMosquittoHost;
             }
 
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.be.an('object');
                 response.should.have.property('statusCode', 201);
                 setTimeout(function() {
-                    request(optionsGetDevice, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetDevice, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 1);
                         body.should.have.property('devices');
                         body.devices.should.be.an('array');

@@ -237,13 +237,13 @@ describe('Device provisioning API: Provision devices', function() {
         };
 
         it('should add the device to the devices list', function(done) {
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 201);
                 setTimeout(function() {
-                    request(optionsGetDevice, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetDevice, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 1);
                         body.should.have.property('devices');
                         body.devices.should.be.an('array');
@@ -327,13 +327,13 @@ describe('Device provisioning API: Provision devices', function() {
         };
 
         it('should add the device to the devices list', function(done) {
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 201);
                 setTimeout(function() {
-                    request(optionsGetDevice, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetDevice, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 2);
                         body.should.have.property('devices');
                         body.devices.should.be.an('array');
@@ -460,9 +460,9 @@ describe('Device provisioning API: Provision devices', function() {
         });
 
         it('should remove the device from the provisioned devices list', function(done) {
-            request(options, function(error, response, body) {
+            request(options, function(error, _response, _body) {
                 should.not.exist(error);
-                const options = {
+                const opts = {
                     url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
                     headers: {
                         'fiware-service': service,
@@ -472,8 +472,8 @@ describe('Device provisioning API: Provision devices', function() {
                     method: 'GET'
                 };
 
-                request(options, function(error, response, body) {
-                    should.not.exist(error);
+                request(opts, function(err, response, body) {
+                    should.not.exist(err);
                     response.should.have.property('statusCode', 200);
                     body.should.have.property('count', 1);
                     body.should.have.property('devices');

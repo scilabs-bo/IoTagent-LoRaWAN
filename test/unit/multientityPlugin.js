@@ -134,17 +134,16 @@ describe('Multientity plugin', function() {
 
         it('should add the device to the devices list', function(done) {
             if (testMosquittoHost) {
-                /* eslint-disable-next-line  standard/computed-property-even-spacing */
                 options.json.devices[0].internal_attributes.lorawan.application_server.host = testMosquittoHost;
             }
 
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 201);
                 setTimeout(function() {
-                    request(optionsGetDevice, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetDevice, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 1);
                         body.should.have.property('devices');
                         body.devices.should.be.an('array');
@@ -224,13 +223,13 @@ describe('Multientity plugin', function() {
                         body.should.have.property('digital_in_3');
                         body.digital_in_3.should.have.property('type', 'Number');
                         body.digital_in_3.should.have.property('value', 101);
-                        request(optionsCBMultiEntity, function(error, response, body) {
-                            should.not.exist(error);
-                            response.should.have.property('statusCode', 200);
-                            body.should.have.property('id', multientityName);
-                            body.should.have.property('temperature_1');
-                            body.temperature_1.should.have.property('type', 'Number');
-                            body.temperature_1.should.have.property('value', 27.2);
+                        request(optionsCBMultiEntity, function(err, resp, bdy) {
+                            should.not.exist(err);
+                            resp.should.have.property('statusCode', 200);
+                            bdy.should.have.property('id', multientityName);
+                            bdy.should.have.property('temperature_1');
+                            bdy.temperature_1.should.have.property('type', 'Number');
+                            bdy.temperature_1.should.have.property('value', 27.2);
                             client.end();
                             done();
                         });

@@ -148,7 +148,6 @@ describe('Configuration provisioning API: Provision groups', function() {
         };
 
         if (testMosquittoHost) {
-            /* eslint-disable-next-line  standard/computed-property-even-spacing */
             options.json.services[0].internal_attributes.lorawan.application_server.host = testMosquittoHost;
         }
 
@@ -163,13 +162,13 @@ describe('Configuration provisioning API: Provision groups', function() {
         };
 
         it('should add the group to the list', function(done) {
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 201);
                 setTimeout(function() {
-                    request(optionsGetService, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetService, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 1);
                         body.should.have.property('services');
                         body.services.should.have.length(1);
@@ -294,13 +293,13 @@ describe('Configuration provisioning API: Provision groups', function() {
             }
         };
         it('should update the group in the list', function(done) {
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 204);
                 setTimeout(function() {
-                    request(optionsGetService, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetService, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 1);
                         body.should.have.property('services');
                         body.services.should.have.length(1);
@@ -414,7 +413,6 @@ describe('Configuration provisioning API: Provision groups', function() {
         };
 
         if (testMosquittoHost) {
-            /* eslint-disable-next-line  standard/computed-property-even-spacing */
             options.json.services[0].internal_attributes.lorawan.application_server.host = testMosquittoHost;
         }
 
@@ -429,13 +427,13 @@ describe('Configuration provisioning API: Provision groups', function() {
         };
 
         it('should add the group to the list', function(done) {
-            request(options, function(error, response, body) {
+            request(options, function(error, response, _body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 201);
                 setTimeout(function() {
-                    request(optionsGetService, function(error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
+                    request(optionsGetService, function(err, resp, body) {
+                        should.not.exist(err);
+                        resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 2);
                         body.should.have.property('services');
                         body.services.should.have.length(2);

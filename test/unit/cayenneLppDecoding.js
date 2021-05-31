@@ -92,7 +92,7 @@ describe('CayenneLpp decoding', function() {
     });
 });
 
-describe('NGSI translation', function(done) {
+describe('NGSI translation', function(_done) {
     const device = {
         active: [
             {
