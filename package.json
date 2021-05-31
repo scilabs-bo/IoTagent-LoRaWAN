@@ -32,8 +32,8 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^3.0.2",
-    "@semantic-release/git": "^7.0.8",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/git": "^9.0.0",
     "chai": "^4.2.0",
     "coveralls": "~3.0.2",
     "eslint": "^7.27.0",
@@ -52,7 +52,7 @@
     "prettier": "^2.3.0",
     "remark-cli": "^9.0.0",
     "remark-preset-lint-recommended": "^5.0.0",
-    "semantic-release": "^15.13.3",
+    "semantic-release": "^17.4.3",
     "textlint": "^12.0.0",
     "textlint-rule-common-misspellings": "^1.0.1",
     "textlint-rule-no-dead-link": "^4.7.0",
