@@ -30,7 +30,7 @@
     "iotagent-node-lib": "git://github.com/telefonicaid/iotagent-node-lib.git#master",
     "mqtt": "^2.18.8",
     "request": "^2.88.0",
-    "winston": "^3.1.0"
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^5.0.1",
