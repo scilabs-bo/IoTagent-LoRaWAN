@@ -23,7 +23,7 @@ considered.
 -   Docker Compose version 1.22.0 or higher. Detailed installation instructions can be found
     [here](https://docs.docker.com/compose/install/).
 -   System Workbench for STM32 (aka SW4STM32). A free multi-OS software development environment based on Eclipse.
-    Detailed installation instructions can be found [here](http://www.openstm32.org/HomePage).
+    Detailed installation instructions can be found [here](https://www.openstm32.org/HomePage).
 -   Curl
 
 ```bash

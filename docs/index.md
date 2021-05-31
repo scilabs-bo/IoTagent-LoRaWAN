@@ -20,7 +20,7 @@ This project is part of [FIWARE](https://www.fiware.org/). Check also the FIWARE
 
 ### Architecture
 
-As it is explained in [What is LoRaWAN™](https://lora-alliance.org/sites/default/files/2018-04/what-is-lorawan.pdf), the
+As it is explained in [What is LoRaWAN™](https://lora-alliance.org/wp-content/uploads/2020/11/what-is-lorawan.pdf), the
 proposed _Network Architecture_ for a LoRaWAN based system relies on a mesh network architecture composed of _End
 nodes_, _Concentrators_, _Network Servers_ and _Application Servers_. This IoTA is fully compliant with this
 architecture, providing interoperability between FIWARE NGSI Context Brokers and LoRaWAN devices.
