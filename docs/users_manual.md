@@ -206,10 +206,10 @@ config.iota = {
     contextBroker: {
         host: "localhost",
         port: "1026",
-        ngsiVersion: "v2"
+        ngsiVersion: "v2",
     },
     server: {
-        port: 4041
+        port: 4041,
     },
     service: "howtoService",
     subservice: "/howto",
@@ -218,12 +218,12 @@ config.iota = {
     defaultType: "Thing",
     defaultResource: "/iot/d",
     deviceRegistry: {
-        type: "mongodb"
+        type: "mongodb",
     },
     mongodb: {
         host: "localhost",
         port: "27017",
-        db: "iotagentLoraTest"
+        db: "iotagentLoraTest",
     },
     types: {
         Mote: {
@@ -233,31 +233,31 @@ config.iota = {
                 {
                     object_id: "bp0",
                     name: "barometric_pressure_0",
-                    type: "hpa"
+                    type: "hpa",
                 },
                 {
                     object_id: "di3",
                     name: "digital_in_3",
-                    type: "Number"
+                    type: "Number",
                 },
                 {
                     object_id: "do4",
                     name: "digital_out_4",
-                    type: "Number"
+                    type: "Number",
                 },
                 {
                     object_id: "rh2",
                     name: "relative_humidity_2",
-                    type: "Number"
+                    type: "Number",
                 },
                 {
                     object_id: "t1",
                     name: "temperature_1",
-                    type: "Number"
-                }
-            ]
-        }
-    }
+                    type: "Number",
+                },
+            ],
+        },
+    },
 };
 
 module.exports = config;

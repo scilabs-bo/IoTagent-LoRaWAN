@@ -30,7 +30,7 @@ const iotAgentLib = require('iotagent-node-lib');
 const mqtt = require('mqtt');
 const should = require('chai').should();
 
-describe('CBOR Attributes', function() {
+describe('CBOR Attributes', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;
@@ -60,7 +60,7 @@ describe('CBOR Attributes', function() {
         }
     }
 
-    before(function(done) {
+    before(function (done) {
         readEnvVariables();
         async.series(
             [
@@ -71,7 +71,7 @@ describe('CBOR Attributes', function() {
         );
     });
 
-    after(function(done) {
+    after(function (done) {
         async.series(
             [
                 iotAgentLib.clearAll,
@@ -82,7 +82,7 @@ describe('CBOR Attributes', function() {
         );
     });
 
-    describe('When a device provisioning request with all the required data arrives to the IoT Agent. Proprietary decoding at application server', function() {
+    describe('When a device provisioning request with all the required data arrives to the IoT Agent. Proprietary decoding at application server', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
@@ -102,17 +102,17 @@ describe('CBOR Attributes', function() {
             }
         };
 
-        it('should add the device to the devices list', function(done) {
+        it('should add the device to the devices list', function (done) {
             if (testMosquittoHost) {
                 options.json.devices[0].internal_attributes.lorawan.application_server.host = testMosquittoHost;
             }
 
-            request(options, function(error, response, _body) {
+            request(options, function (error, response, _body) {
                 should.not.exist(error);
                 response.should.be.an('object');
                 response.should.have.property('statusCode', 201);
-                setTimeout(function() {
-                    request(optionsGetDevice, function(err, resp, body) {
+                setTimeout(function () {
+                    request(optionsGetDevice, function (err, resp, body) {
                         should.not.exist(err);
                         resp.should.have.property('statusCode', 200);
                         body.should.have.property('count', 1);
@@ -126,7 +126,7 @@ describe('CBOR Attributes', function() {
             });
         });
 
-        it('should register the entity in the CB', function(done) {
+        it('should register the entity in the CB', function (done) {
             const optionsCB = {
                 url: 'http://' + orionServer + '/v2/entities/' + options.json.devices[0].entity_name,
                 method: 'GET',
@@ -137,7 +137,7 @@ describe('CBOR Attributes', function() {
                 }
             };
 
-            request(optionsCB, function(error, response, body) {
+            request(optionsCB, function (error, response, body) {
                 should.not.exist(error);
                 response.should.have.property('statusCode', 200);
                 body.should.have.property('id', options.json.devices[0].entity_name);
@@ -145,7 +145,7 @@ describe('CBOR Attributes', function() {
             });
         });
 
-        it('Should process correctly active attributes represented in CBOR model', function(done) {
+        it('Should process correctly active attributes represented in CBOR model', function (done) {
             const rawJSONPayload = {
                 barometric_pressure_0: 0,
                 digital_in_3: 100,
@@ -168,7 +168,7 @@ describe('CBOR Attributes', function() {
             attributesExample.payload_raw = null;
             attributesExample.payload_fields = rawJSONPayload;
             const client = mqtt.connect('mqtt://' + testMosquittoHost);
-            client.on('connect', function() {
+            client.on('connect', function () {
                 client.publish(
                     options.json.devices[0].internal_attributes.lorawan.application_id +
                         '/devices/' +
@@ -176,8 +176,8 @@ describe('CBOR Attributes', function() {
                         '/up',
                     JSON.stringify(attributesExample)
                 );
-                setTimeout(function() {
-                    request(optionsCB, function(error, response, body) {
+                setTimeout(function () {
+                    request(optionsCB, function (error, response, body) {
                         should.not.exist(error);
                         response.should.have.property('statusCode', 200);
                         body.should.have.property('id', options.json.devices[0].entity_name);
@@ -192,8 +192,8 @@ describe('CBOR Attributes', function() {
         });
     });
 
-    describe('Active attributes are reported using attributes alias', function() {
-        it('Should process correctly active attributes', function(done) {
+    describe('Active attributes are reported using attributes alias', function () {
+        it('Should process correctly active attributes', function (done) {
             const optionsCB = {
                 url: 'http://' + orionServer + '/v2/entities/LORA-N-003',
                 method: 'GET',
@@ -214,10 +214,10 @@ describe('CBOR Attributes', function() {
             const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
             attributesExample.payload_fields = rawJSONPayload;
             const client = mqtt.connect('mqtt://' + testMosquittoHost);
-            client.on('connect', function() {
+            client.on('connect', function () {
                 client.publish('ari_ioe_app_demo1/devices/lora_n_003/up', JSON.stringify(attributesExample));
-                setTimeout(function() {
-                    request(optionsCB, function(error, response, body) {
+                setTimeout(function () {
+                    request(optionsCB, function (error, response, body) {
                         should.not.exist(error);
                         response.should.have.property('statusCode', 200);
                         body.should.have.property('id', 'LORA-N-003');

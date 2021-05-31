@@ -24,7 +24,6 @@ This project is part of [FIWARE](https://www.fiware.org/). For more information 
 | :books: [Documentation](https://fiware-lorawan.readthedocs.io) | :mortar_board: [Academy](https://fiware-academy.readthedocs.io/en/latest/iot-agents/idas) | :whale: [Docker Hub](https://hub.docker.com/r/fiware/iotagent-lorawan/) | :dart: [Roadmap](docs/roadmap.md) |
 | -------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------- |
 
-
 ## Contents
 
 -   [Background](#background)
