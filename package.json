@@ -15,7 +15,8 @@
     "test:coverage": "istanbul cover _mocha -- --recursive 'test/**/*.js' --reporter spec --exit",
     "test:coveralls": "npm run test:coverage && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "watch": "watch 'npm test && npm run lint' ./lib ./test",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "prepare": "husky install"
   },
   "license": "GPL-3.0",
   "repository": {
@@ -44,9 +45,9 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-promise": "^5.1.0",
-    "husky": "~1.1.0",
+    "husky": "^6.0.0",
     "istanbul": "^0.4.5",
-    "lint-staged": "~7.3.0",
+    "lint-staged": "^11.0.0",
     "mocha": "^5.2.0",
     "nock": "^10.0.2",
     "prettier": "^2.3.0",
@@ -80,14 +81,9 @@
           "package.json",
           "CHANGELOG.md"
         ],
-        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+        "message": "chore[release]: ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.js": [
