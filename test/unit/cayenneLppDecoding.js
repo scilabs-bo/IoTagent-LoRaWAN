@@ -23,10 +23,10 @@
 
 const decoder = require('../../lib/dataModels/cayenneLpp');
 const translator = require('../../lib/dataTranslationService');
-require('chai').should();
+require('chai/register-should');
 
 describe('CayenneLpp decoding', function () {
-    it('Should decode a payload with digital input, digital output, temperature, relative humidity and barometric pressure', function (done) {
+    it('Should decode a payload with digital input, digital output, temperature, relative humidity and barometric pressure', function () {
         const cayenneLppMessageBase64 = 'AHMAAAFnARACaAADAGQEAQA=';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.be.an('object');
@@ -35,64 +35,57 @@ describe('CayenneLpp decoding', function () {
         decodedMessage.should.have.property('digital_in_3', 100);
         decodedMessage.should.have.property('digital_out_4', 0);
         decodedMessage.should.have.property('relative_humidity_2', 0);
-        return done();
     });
 
-    it('Should decode a payload with temperature', function (done) {
+    it('Should decode a payload with temperature', function () {
         const cayenneLppMessageBase64 = 'AWf/1w==';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.have.property('temperature_1', -4.1);
-        return done();
     });
 
-    it('Should decode a payload with analog input and analog output', function (done) {
+    it('Should decode a payload with analog input and analog output', function () {
         const cayenneLppMessageBase64 = 'DQL63gADEkU=';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.have.property('analog_in_13', -13.14);
         decodedMessage.should.have.property('analog_out_0', 46.77);
-        return done();
     });
 
-    it('Should decode a payload with luminosity and presence', function (done) {
+    it('Should decode a payload with luminosity and presence', function () {
         const cayenneLppMessageBase64 = 'FWUAFwdmLA==';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.have.property('luminosity_21', 23);
         decodedMessage.should.have.property('presence_7', 44);
-        return done();
     });
 
-    it('Should decode a payload with accelerometer', function (done) {
+    it('Should decode a payload with accelerometer', function () {
         const cayenneLppMessageBase64 = 'BnEE0vsuAAA==';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.have.property('accelerometer_6');
         decodedMessage.accelerometer_6.should.have.property('x', 1.234);
         decodedMessage.accelerometer_6.should.have.property('y', -1.234);
         decodedMessage.accelerometer_6.should.have.property('z', 0);
-        return done();
     });
 
-    it('Should decode a payload with gyrometer', function (done) {
+    it('Should decode a payload with gyrometer', function () {
         const cayenneLppMessageBase64 = 'EoYBxx7THds=';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.have.property('gyrometer_18');
         decodedMessage.gyrometer_18.should.have.property('x', 4.55);
         decodedMessage.gyrometer_18.should.have.property('y', 78.91);
         decodedMessage.gyrometer_18.should.have.property('z', 76.43);
-        return done();
     });
 
-    it('Should decode a payload with GPS', function (done) {
+    it('Should decode a payload with GPS', function () {
         const cayenneLppMessageBase64 = 'AYgGdl/ylgoAA+g=';
         const decodedMessage = decoder.decodeCayenneLpp(cayenneLppMessageBase64);
         decodedMessage.should.have.property('gps_1');
         decodedMessage.gps_1.should.have.property('latitude', 42.3519);
         decodedMessage.gps_1.should.have.property('longitude', -87.9094);
         decodedMessage.gps_1.should.have.property('altitude', 10);
-        return done();
     });
 });
 
-describe('NGSI translation', function (_done) {
+describe('NGSI translation', function () {
     const device = {
         active: [
             {
@@ -111,14 +104,13 @@ describe('NGSI translation', function (_done) {
         ]
     };
 
-    it('Should translate a CayenneLpp payload to NGSI', function (done) {
+    it('Should translate a CayenneLpp payload to NGSI', function () {
         const cayenneLppMessageBase64 = 'AHMAAAFnARACaAADAGQEAQA=';
         const decodedMessage = translator.toNgsi(cayenneLppMessageBase64, device);
         decodedMessage.should.be.an('array');
-        return done();
     });
 
-    it('Should translate a CayenneLpp payload including GPS to NGSI', function (done) {
+    it('Should translate a CayenneLpp payload including GPS to NGSI', function () {
         const cayenneLppMessageBase64 = 'AYgGdl/ylgoAA+g=';
         const decodedMessage = translator.toNgsi(cayenneLppMessageBase64, deviceGps);
         decodedMessage.should.be.an('array');
@@ -127,6 +119,5 @@ describe('NGSI translation', function (_done) {
         decodedMessage[0].should.have.property('name', 'gps_1');
         decodedMessage[0].should.have.property('type', 'geo:point');
         decodedMessage[0].should.have.property('value', '42.3519,-87.9094');
-        return done();
     });
 });

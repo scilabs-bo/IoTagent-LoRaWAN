@@ -22,7 +22,7 @@
 /* eslint-disable no-unused-vars */
 
 const fs = require('fs');
-const request = require('request');
+const got = require('got');
 const winston = require('winston');
 
 function readExampleFile(name, raw) {
@@ -36,24 +36,33 @@ function readExampleFile(name, raw) {
     return raw ? text : JSON.parse(text);
 }
 
-function deleteEntityCB(cbConfig, service, servicePath, cbEntityName, callback) {
+async function deleteEntityCB(cbConfig, service, servicePath, cbEntityName) {
     const optionsCB = {
         url: 'http://' + cbConfig.host + ':' + cbConfig.port + '/v2/entities/' + cbEntityName,
         method: 'DELETE',
-        json: true,
+        responseType: 'json',
         headers: {
             'fiware-service': service,
             'fiware-servicepath': servicePath
-        }
+        },
+        throwHttpErrors: false
     };
 
-    request(optionsCB, function (error, response, body) {
-        if (error) {
-            winston.error(error);
-        }
-        return callback();
+    try {
+        await got(optionsCB);
+    } catch (e) {
+        winston.error(e);
+    }
+}
+
+async function delay(ms) {
+    return new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve();
+        }, ms);
     });
 }
 
 exports.readExampleFile = readExampleFile;
 exports.deleteEntityCB = deleteEntityCB;
+exports.delay = delay;

@@ -21,15 +21,15 @@
 
 /* eslint-disable no-unused-vars */
 
-const request = require('request');
-const async = require('async');
-const should = require('chai').should();
+const got = require('got');
 const iotAgentConfig = require('../config-test.js');
 const utils = require('../utils');
 const iotagentLora = require('../../');
 const iotAgentLib = require('iotagent-node-lib');
-const mqtt = require('mqtt');
+const mqtt = require('async-mqtt');
 const CBOR = require('cbor-sync');
+const { promisify } = require('util');
+require('chai/register-should');
 
 describe('Multientity plugin', function () {
     let testMosquittoHost = 'localhost';
@@ -61,34 +61,24 @@ describe('Multientity plugin', function () {
         }
     }
 
-    before(function (done) {
+    before(async function () {
         readEnvVariables();
-        async.series(
-            [
-                async.apply(utils.deleteEntityCB, iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003'),
-                async.apply(utils.deleteEntityCB, iotAgentConfig.iota.contextBroker, service, subservice, 'Mote001'),
-                async.apply(iotagentLora.start, iotAgentConfig)
-            ],
-            done
-        );
+        await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003');
+        await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'Mote001');
+        await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
     });
 
-    after(function (done) {
-        async.series(
-            [
-                iotAgentLib.clearAll,
-                iotagentLora.stop,
-                async.apply(utils.deleteEntityCB, iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003'),
-                async.apply(utils.deleteEntityCB, iotAgentConfig.iota.contextBroker, service, subservice, 'Mote001')
-            ],
-            done
-        );
+    after(async function () {
+        await promisify(iotAgentLib.clearAll)();
+        await promisify(iotagentLora.stop)();
+        await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003');
+        await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'Mote001');
     });
 
     describe('When a device provisioning request with all the required data arrives to the IoT Agent. Multientity plugin', function () {
         const multientityName = 'Mote001';
         const multientityType = 'Mote';
-        before(function (done) {
+        before(async function () {
             const createEntityCB = {
                 url: 'http://' + orionServer + '/v2/entities/',
                 method: 'POST',
@@ -100,23 +90,22 @@ describe('Multientity plugin', function () {
                         value: 0
                     }
                 },
+                responseType: 'json',
                 headers: {
                     'fiware-service': service,
                     'fiware-servicepath': subservice
                 }
             };
 
-            request(createEntityCB, function (error, response, body) {
-                should.not.exist(error);
-                response.should.have.property('statusCode', 201);
-                done();
-            });
+            const response = await got(createEntityCB);
+            response.should.have.property('statusCode', 201);
         });
 
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
             json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceMultientityPluginTTN.json'),
+            responseType: 'json',
             headers: {
                 'fiware-service': service,
                 'fiware-servicepath': subservice
@@ -125,56 +114,47 @@ describe('Multientity plugin', function () {
         const optionsGetDevice = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'GET',
-            json: true,
+            responseType: 'json',
             headers: {
                 'fiware-service': service,
                 'fiware-servicepath': subservice
             }
         };
 
-        it('should add the device to the devices list', function (done) {
+        it('should add the device to the devices list', async function () {
             if (testMosquittoHost) {
                 options.json.devices[0].internal_attributes.lorawan.application_server.host = testMosquittoHost;
             }
 
-            request(options, function (error, response, _body) {
-                should.not.exist(error);
-                response.should.have.property('statusCode', 201);
-                setTimeout(function () {
-                    request(optionsGetDevice, function (err, resp, body) {
-                        should.not.exist(err);
-                        resp.should.have.property('statusCode', 200);
-                        body.should.have.property('count', 1);
-                        body.should.have.property('devices');
-                        body.devices.should.be.an('array');
-                        body.devices.should.have.length(1);
-                        body.devices[0].should.have.property('device_id', options.json.devices[0].device_id);
-                        done();
-                    });
-                }, 500);
-            });
+            let response = await got(options);
+            response.should.have.property('statusCode', 201);
+            await utils.delay(500);
+            response = await got(optionsGetDevice);
+            response.should.have.property('statusCode', 200);
+            response.body.should.have.property('count', 1);
+            response.body.should.have.property('devices');
+            response.body.devices.should.be.an('array');
+            response.body.devices.should.have.length(1);
+            response.body.devices[0].should.have.property('device_id', options.json.devices[0].device_id);
         });
 
-        it('should register the entity in the CB', function (done) {
+        it('should register the entity in the CB', async function () {
             const optionsCB = {
                 url: 'http://' + orionServer + '/v2/entities/' + options.json.devices[0].entity_name,
                 method: 'GET',
-                json: true,
+                responseType: 'json',
                 headers: {
                     'fiware-service': service,
                     'fiware-servicepath': subservice
                 }
             };
 
-            request(optionsCB, function (error, response, body) {
-                should.not.exist(error);
-                response.should.have.property('statusCode', 200);
-                body.should.have.property('id', options.json.devices[0].entity_name);
-                done();
-            });
+            const response = await got(optionsCB);
+            response.should.have.property('statusCode', 200);
+            response.body.should.have.property('id', options.json.devices[0].entity_name);
         });
 
-        it('Should process correctly active attributes represented in CBOR model', function (done) {
+        it('Should process correctly active attributes represented in CBOR model', async function () {
             const rawJSONPayload = {
                 barometric_pressure_0: 0,
                 digital_in_3: 101,
@@ -186,7 +166,7 @@ describe('Multientity plugin', function () {
             const optionsCB = {
                 url: 'http://' + orionServer + '/v2/entities/' + options.json.devices[0].entity_name,
                 method: 'GET',
-                json: true,
+                responseType: 'json',
                 headers: {
                     'fiware-service': service,
                     'fiware-servicepath': subservice
@@ -196,7 +176,7 @@ describe('Multientity plugin', function () {
             const optionsCBMultiEntity = {
                 url: 'http://' + orionServer + '/v2/entities/' + multientityName,
                 method: 'GET',
-                json: true,
+                responseType: 'json',
                 headers: {
                     'fiware-service': service,
                     'fiware-servicepath': subservice
@@ -206,36 +186,28 @@ describe('Multientity plugin', function () {
             const encodedBuffer = CBOR.encode(rawJSONPayload);
             const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
             attributesExample.payload_raw = encodedBuffer.toString('base64');
-            const client = mqtt.connect('mqtt://' + testMosquittoHost);
-            client.on('connect', function () {
-                client.publish(
-                    options.json.devices[0].internal_attributes.lorawan.application_id +
-                        '/devices/' +
-                        options.json.devices[0].device_id +
-                        '/up',
-                    JSON.stringify(attributesExample)
-                );
-                setTimeout(function () {
-                    request(optionsCB, function (error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
-                        body.should.have.property('id', options.json.devices[0].entity_name);
-                        body.should.have.property('digital_in_3');
-                        body.digital_in_3.should.have.property('type', 'Number');
-                        body.digital_in_3.should.have.property('value', 101);
-                        request(optionsCBMultiEntity, function (err, resp, bdy) {
-                            should.not.exist(err);
-                            resp.should.have.property('statusCode', 200);
-                            bdy.should.have.property('id', multientityName);
-                            bdy.should.have.property('temperature_1');
-                            bdy.temperature_1.should.have.property('type', 'Number');
-                            bdy.temperature_1.should.have.property('value', 27.2);
-                            client.end();
-                            done();
-                        });
-                    });
-                }, 500);
-            });
+            const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
+            await client.publish(
+                options.json.devices[0].internal_attributes.lorawan.application_id +
+                    '/devices/' +
+                    options.json.devices[0].device_id +
+                    '/up',
+                JSON.stringify(attributesExample)
+            );
+            await utils.delay(500);
+            let response = await got(optionsCB);
+            response.should.have.property('statusCode', 200);
+            response.body.should.have.property('id', options.json.devices[0].entity_name);
+            response.body.should.have.property('digital_in_3');
+            response.body.digital_in_3.should.have.property('type', 'Number');
+            response.body.digital_in_3.should.have.property('value', 101);
+            response = await got(optionsCBMultiEntity);
+            response.should.have.property('statusCode', 200);
+            response.body.should.have.property('id', multientityName);
+            response.body.should.have.property('temperature_1');
+            response.body.temperature_1.should.have.property('type', 'Number');
+            response.body.temperature_1.should.have.property('value', 27.2);
+            await client.end();
         });
     });
 });

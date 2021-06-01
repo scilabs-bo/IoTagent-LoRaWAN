@@ -19,14 +19,14 @@
  *
  */
 
-const request = require('request');
-const async = require('async');
-const should = require('chai').should();
+const got = require('got');
 const iotAgentConfig = require('../config-test.js');
 const utils = require('../utils');
 const iotagentLora = require('../../');
 const iotAgentLib = require('iotagent-node-lib');
-const mqtt = require('mqtt');
+const mqtt = require('async-mqtt');
+const { promisify } = require('util');
+require('chai/register-should');
 
 describe('Static provisioning', function () {
     let testMosquittoHost = 'localhost';
@@ -53,40 +53,28 @@ describe('Static provisioning', function () {
         orionServer = orionHost + ':' + orionPort;
     }
 
-    beforeEach(function (done) {
-        async.series(
-            [
-                async.apply(
-                    utils.deleteEntityCB,
-                    iotAgentConfig.iota.contextBroker,
-                    service,
-                    subservice,
-                    'lora_unprovisioned_device:LoraDeviceGroup'
-                )
-            ],
-            done
+    beforeEach(async function () {
+        await utils.deleteEntityCB(
+            iotAgentConfig.iota.contextBroker,
+            service,
+            subservice,
+            'lora_unprovisioned_device:LoraDeviceGroup'
         );
     });
 
-    afterEach(function (done) {
-        async.series(
-            [
-                iotAgentLib.clearAll,
-                iotagentLora.stop,
-                async.apply(
-                    utils.deleteEntityCB,
-                    iotAgentConfig.iota.contextBroker,
-                    service,
-                    subservice,
-                    'lora_unprovisioned_device:LoraDeviceGroup'
-                )
-            ],
-            done
+    afterEach(async function () {
+        await promisify(iotAgentLib.clearAll)();
+        await promisify(iotagentLora.stop)();
+        await utils.deleteEntityCB(
+            iotAgentConfig.iota.contextBroker,
+            service,
+            subservice,
+            'lora_unprovisioned_device:LoraDeviceGroup'
         );
     });
 
     describe('When a new type is provisioned without LoRaWAN configuration', function () {
-        it('Should start the agent without error', function (done) {
+        it('Should start the agent without error', async function () {
             const sensorType = {
                 service: 'factory',
                 subservice: '/robots',
@@ -99,10 +87,7 @@ describe('Static provisioning', function () {
             };
 
             iotAgentConfig.iota.types.Robot = sensorType;
-            iotagentLora.start(iotAgentConfig, function (error) {
-                should.not.exist(error);
-                return done();
-            });
+            await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
         });
     });
 
@@ -111,7 +96,7 @@ describe('Static provisioning', function () {
         let cbEntityName;
         let sensorType;
         let optionsCB;
-        it('Should start the agent without error', function (done) {
+        it('Should start the agent without error', async function () {
             sensorType = {
                 service: 'factory',
                 subservice: '/robots',
@@ -163,7 +148,7 @@ describe('Static provisioning', function () {
             optionsCB = {
                 url: 'http://' + orionServer + '/v2/entities/' + cbEntityName,
                 method: 'GET',
-                json: true,
+                responseType: 'json',
                 headers: {
                     'fiware-service': sensorType.service,
                     'fiware-servicepath': sensorType.subservice
@@ -176,39 +161,30 @@ describe('Static provisioning', function () {
 
             iotAgentConfig.iota.types[type] = sensorType;
 
-            iotagentLora.start(iotAgentConfig, function (error) {
-                should.not.exist(error);
-                return done();
-            });
+            await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
         });
 
-        it('Should register correctly new devices for the type and process their active attributes', function (done) {
+        it('Should register correctly new devices for the type and process their active attributes', async function () {
             const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
             attributesExample.dev_id = devId;
-            const client = mqtt.connect('mqtt://' + testMosquittoHost);
-            client.on('connect', function () {
-                client.publish(
-                    sensorType.internalAttributes.lorawan.application_id + '/devices/' + devId + '/up',
-                    JSON.stringify(attributesExample)
-                );
-                setTimeout(function () {
-                    request(optionsCB, function (error, response, body) {
-                        should.not.exist(error);
-                        response.should.have.property('statusCode', 200);
-                        body.should.have.property('id', cbEntityName);
-                        body.should.have.property('temperature_1');
-                        body.temperature_1.should.have.property('type', 'Number');
-                        body.temperature_1.should.have.property('value', 27.2);
-                        client.end();
-                        return done();
-                    });
-                }, 1000);
-            });
+            const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
+            await client.publish(
+                sensorType.internalAttributes.lorawan.application_id + '/devices/' + devId + '/up',
+                JSON.stringify(attributesExample)
+            );
+            await utils.delay(1000);
+            const response = await got(optionsCB);
+            response.should.have.property('statusCode', 200);
+            response.body.should.have.property('id', cbEntityName);
+            response.body.should.have.property('temperature_1');
+            response.body.temperature_1.should.have.property('type', 'Number');
+            response.body.temperature_1.should.have.property('value', 27.2);
+            await client.end();
         });
     });
 
     describe('When a new type is provisioned with LoRaWAN configuration but the application server has been already used for other type', function () {
-        it('Should not start the agent', function (done) {
+        it('Should not start the agent', async function () {
             const sensorType = {
                 service: 'factory',
                 subservice: '/robots',
@@ -233,10 +209,12 @@ describe('Static provisioning', function () {
                 }
             };
             iotAgentConfig.iota.types.Robot2 = sensorType;
-            iotagentLora.start(iotAgentConfig, function (error) {
-                should.exist(error);
-                return done();
-            });
+            try {
+                await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+            } catch (e) {
+                return;
+            }
+            throw new Error('The IoT agent should fail to start');
         });
     });
 });
