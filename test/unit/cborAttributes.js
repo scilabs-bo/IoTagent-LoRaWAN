@@ -102,7 +102,6 @@ describe('CBOR Attributes', function () {
             let response = await got(options);
             response.should.be.an('object');
             response.should.have.property('statusCode', 201);
-            await utils.delay(500);
             response = await got(optionsGetDevice);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('count', 1);

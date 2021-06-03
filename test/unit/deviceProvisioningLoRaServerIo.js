@@ -108,7 +108,6 @@ describe('Device provisioning API: Provision devices', function () {
         it('should add the device to the devices list', async function () {
             let response = await got(options);
             response.should.have.property('statusCode', 201);
-            await utils.delay(500);
             response = await got(optionsGetDevice);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('count', 1);
@@ -185,7 +184,6 @@ describe('Device provisioning API: Provision devices', function () {
         it('should add the device to the devices list', async function () {
             let response = await got(options);
             response.should.have.property('statusCode', 201);
-            await utils.delay(500);
             response = await got(optionsGetDevice);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('count', 2);

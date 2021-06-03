@@ -129,7 +129,6 @@ describe('Configuration provisioning API: Provision groups', function () {
         it('should add the group to the list', async function () {
             let response = await got(options);
             response.should.have.property('statusCode', 201);
-            await utils.delay(500);
             response = await got(optionsGetService);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('count', 1);
@@ -240,7 +239,6 @@ describe('Configuration provisioning API: Provision groups', function () {
         it('should update the group in the list', async function () {
             let response = await got(options);
             response.should.have.property('statusCode', 204);
-            await utils.delay(500);
             response = await got(optionsGetService);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('count', 1);
@@ -353,7 +351,6 @@ describe('Configuration provisioning API: Provision groups', function () {
         it('should add the group to the list', async function () {
             let response = await got(options);
             response.should.have.property('statusCode', 201);
-            await utils.delay(500);
             response = await got(optionsGetService);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('count', 2);
