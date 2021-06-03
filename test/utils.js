@@ -55,7 +55,7 @@ async function deleteEntityCB(cbConfig, service, servicePath, cbEntityName) {
     }
 }
 
-async function delay(ms) {
+function delay(ms) {
     return new Promise(function (resolve) {
         setTimeout(function () {
             resolve();

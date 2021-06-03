@@ -59,12 +59,12 @@ describe('Device provisioning API: Provision devices', function () {
     before(async function () {
         await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003');
         await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-001');
-        await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+        await iotagentLora.start(iotAgentConfig);
     });
 
     after(async function () {
         await promisify(iotAgentLib.clearAll)();
-        await promisify(iotagentLora.stop)();
+        await iotagentLora.stop();
         await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003');
         await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-001');
     });
@@ -235,7 +235,7 @@ describe('Device provisioning API: Provision devices', function () {
         });
 
         it('should register the entity in the CB', async function () {
-            let response = await got(optionsCB);
+            const response = await got(optionsCB);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('id', options.json.devices[0].entity_name);
         });
@@ -311,7 +311,7 @@ describe('Device provisioning API: Provision devices', function () {
         });
 
         it('should register the entity in the CB', async function () {
-            let response = await got(optionsCB);
+            const response = await got(optionsCB);
             response.should.have.property('statusCode', 200);
             response.body.should.have.property('id', options.json.devices[0].entity_name);
         });
@@ -367,8 +367,8 @@ describe('Device provisioning API: Provision devices', function () {
                 }
             };
             const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp3.json');
-            await promisify(iotagentLora.stop)();
-            await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+            await iotagentLora.stop();
+            await iotagentLora.start(iotAgentConfig);
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/lora_n_003/up', JSON.stringify(attributesExample));
             await utils.delay(500);

@@ -64,7 +64,11 @@ describe('Static provisioning', function () {
 
     afterEach(async function () {
         await promisify(iotAgentLib.clearAll)();
-        await promisify(iotagentLora.stop)();
+        try {
+            await iotagentLora.stop();
+        } catch (e) {
+            /* Server not running */
+        }
         await utils.deleteEntityCB(
             iotAgentConfig.iota.contextBroker,
             service,
@@ -87,7 +91,7 @@ describe('Static provisioning', function () {
             };
 
             iotAgentConfig.iota.types.Robot = sensorType;
-            await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+            await iotagentLora.start(iotAgentConfig);
         });
     });
 
@@ -161,10 +165,11 @@ describe('Static provisioning', function () {
 
             iotAgentConfig.iota.types[type] = sensorType;
 
-            await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+            await iotagentLora.start(iotAgentConfig);
         });
 
         it('Should register correctly new devices for the type and process their active attributes', async function () {
+            await iotagentLora.start(iotAgentConfig);
             const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
@@ -210,7 +215,7 @@ describe('Static provisioning', function () {
             };
             iotAgentConfig.iota.types.Robot2 = sensorType;
             try {
-                await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+                await iotagentLora.start(iotAgentConfig);
             } catch (e) {
                 return;
             }

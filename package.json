@@ -25,11 +25,10 @@
   },
   "author": "ATOS SPAIN S.A. IoE Lab, Resarch and Innovation department",
   "dependencies": {
-    "async": "^3.2.0",
     "async-mqtt": "^2.6.1",
+    "await-lock": "^2.1.0",
     "cbor-sync": "^1.0.4",
     "iotagent-node-lib": "git://github.com/telefonicaid/iotagent-node-lib.git#master",
-    "mqtt": "^4.2.6",
     "winston": "^3.3.3"
   },
   "devDependencies": {

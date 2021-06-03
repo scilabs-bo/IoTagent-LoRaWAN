@@ -63,12 +63,12 @@ describe('CBOR Attributes', function () {
     before(async function () {
         readEnvVariables();
         await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003');
-        await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+        await iotagentLora.start(iotAgentConfig);
     });
 
     after(async function () {
         await promisify(iotAgentLib.clearAll)();
-        await promisify(iotagentLora.stop)();
+        await iotagentLora.stop();
         await utils.deleteEntityCB(iotAgentConfig.iota.contextBroker, service, subservice, 'LORA-N-003');
     });
 

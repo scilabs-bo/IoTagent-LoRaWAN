@@ -12,7 +12,7 @@
 var iotAgentLora = require('../lib/iotagent-lora');
 var winston = require('winston');
 
-function start () {
+async function start() {
     var config;
 
     if (process.argv.length === 3) {
@@ -21,14 +21,12 @@ function start () {
         config = require('../config');
     }
 
-    iotAgentLora.start(config, function (error) {
-        if (error) {
-            winston.error('Error starting LoRaWAN IoT Agent: %s',
-                JSON.stringify(error));
-        } else {
-            winston.info('LoRaWAN IoT Agent started');
-        }
-    });
+    try {
+        await iotAgentLora.start(config);
+        winston.info('LoRaWAN IoT Agent started');
+    } catch (e) {
+        winston.error('Error starting LoRaWAN IoT Agent: %s', JSON.stringify(e));
+    }
 }
 
 start();

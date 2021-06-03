@@ -68,12 +68,12 @@ describe('Configuration provisioning API: Provision groups', function () {
             subservice,
             'lora_unprovisioned_device2:LoraDeviceGroup'
         );
-        await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+        await iotagentLora.start(iotAgentConfig);
     });
 
     after(async function () {
         await promisify(iotAgentLib.clearAll)();
-        await promisify(iotagentLora.stop)();
+        await iotagentLora.stop();
         await utils.deleteEntityCB(
             iotAgentConfig.iota.contextBroker,
             service,
@@ -232,8 +232,8 @@ describe('Configuration provisioning API: Provision groups', function () {
                     'fiware-servicepath': subservice
                 }
             };
-            await promisify(iotagentLora.stop)();
-            await promisify(iotagentLora.start.bind(iotagentLora, iotAgentConfig))();
+            await iotagentLora.stop();
+            await iotagentLora.start(iotAgentConfig);
             const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo3.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
