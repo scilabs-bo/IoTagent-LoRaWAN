@@ -17,7 +17,7 @@
 # License along with iotagent-lora. If not, see http://www.gnu.org/licenses/.
 #
 
-ARG NODE_VERSION=10
+ARG NODE_VERSION=14
 ARG GITHUB_ACCOUNT=Atos-Research-and-Innovation
 ARG GITHUB_REPOSITORY=IoTagent-LoRaWAN
 ARG DOWNLOAD=latest
@@ -121,7 +121,7 @@ LABEL "org.opencontainers.image.source"="https://github.com/${GITHUB_ACCOUNT}/${
 LABEL "org.nodejs.version"="${NODE_VERSION}"
 
 COPY --from=builder /opt/iotagent-lora /opt/iotagent-lora
-RUN npm install pm2@4.4.0 -g --no-package-lock --no-optional
+RUN npm install pm2@4.5.6 -g --no-package-lock --no-optional
 
 USER node
 ENV NODE_ENV=development
