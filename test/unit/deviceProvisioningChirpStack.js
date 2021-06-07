@@ -73,7 +73,7 @@ describe('Device provisioning API: Provision devices (ChirpStack)', function () 
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice1ChirpStack.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_chirpStack_1.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -124,7 +124,7 @@ describe('Device provisioning API: Provision devices (ChirpStack)', function () 
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_chirpStack_1.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
                 'application/' +
@@ -149,7 +149,7 @@ describe('Device provisioning API: Provision devices (ChirpStack)', function () 
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice2ChirpStack.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_chirpStack_2.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -200,7 +200,7 @@ describe('Device provisioning API: Provision devices (ChirpStack)', function () 
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack2.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_chirpStack_2.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
                 'application/' +
@@ -232,7 +232,7 @@ describe('Device provisioning API: Provision devices (ChirpStack)', function () 
 
         it('Should process correctly active attributes', async function () {
             const attributesExample = utils.readExampleFile(
-                './test/activeAttributes/cayenneLpp_bad_rawChirpStack.json',
+                './test/activeAttributes/cayenneLpp_bad_raw_chirpStack.json',
                 true
             );
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);

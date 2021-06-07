@@ -173,7 +173,7 @@ describe('Static provisioning (ChirpStack)', function () {
 
         it('Should register correctly new devices for the type and process their active attributes', async function () {
             await iotagentLora.start(newConf);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_chirpStack_1.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(

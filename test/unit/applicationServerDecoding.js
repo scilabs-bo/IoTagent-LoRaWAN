@@ -76,7 +76,7 @@ describe('Application Server Decoding', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceApplicationServer1TTN.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_application_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -145,7 +145,7 @@ describe('Application Server Decoding', function () {
                 }
             };
 
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_raw = null;
             attributesExample.payload_fields = rawJSONPayload;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
@@ -186,7 +186,7 @@ describe('Application Server Decoding', function () {
                 t1: 27.2
             };
 
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_fields = rawJSONPayload;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/lora_n_003/up', JSON.stringify(attributesExample));

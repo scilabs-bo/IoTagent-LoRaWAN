@@ -104,7 +104,7 @@ describe('Multientity plugin', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceMultientityPluginTTN.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_multientity_ttn_1.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -183,7 +183,7 @@ describe('Multientity plugin', function () {
             };
 
             const encodedBuffer = CBOR.encode(rawJSONPayload);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_raw = encodedBuffer.toString('base64');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(

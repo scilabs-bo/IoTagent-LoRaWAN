@@ -77,7 +77,7 @@ describe('CBOR Attributes', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceCbor1TTN.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_cbor_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -147,7 +147,7 @@ describe('CBOR Attributes', function () {
             };
 
             const encodedBuffer = CBOR.encode(rawJSONPayload);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_raw = encodedBuffer.toString('base64');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -188,7 +188,7 @@ describe('CBOR Attributes', function () {
             };
 
             const encodedBuffer = CBOR.encode(rawJSONPayload);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_raw = encodedBuffer.toString('base64');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/lora_n_003/up', JSON.stringify(attributesExample));
@@ -205,7 +205,7 @@ describe('CBOR Attributes', function () {
 
     describe('Active attributes are reported with incorrect format', function () {
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_raw = 'no_cbor_payload';
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/lora_n_003/up', JSON.stringify(attributesExample));

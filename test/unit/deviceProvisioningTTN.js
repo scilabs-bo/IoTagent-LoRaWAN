@@ -73,7 +73,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceTTN_noInternalAttributes.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_no_internal_attributes.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -92,7 +92,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceTTN_noLorawan.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_no_lorawan.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -111,7 +111,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceTTN_noApplicationServer.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_no_application_server_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -130,7 +130,9 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceTTN_noApplicationServerHost.json'),
+            json: utils.readExampleFile(
+                './test/deviceProvisioning/provision_device_no_application_server_host_ttn.json'
+            ),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -150,7 +152,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
             json: utils.readExampleFile(
-                './test/deviceProvisioning/provisionDeviceTTN_noApplicationServerProvider.json'
+                './test/deviceProvisioning/provision_device_no_application_server_provider.json'
             ),
             responseType: 'json',
             headers: {
@@ -170,7 +172,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDeviceTTN_noMandatoryProperties.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_no_mandatory_properties_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -189,7 +191,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice1TTN.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_ttn_1.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -240,7 +242,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_1.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
                 options.json.devices[0].internal_attributes.lorawan.application_id +
@@ -264,7 +266,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice2TTN.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provision_device_ttn_2.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -315,7 +317,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp2.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_2.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
                 options.json.devices[0].internal_attributes.lorawan.application_id +
@@ -345,7 +347,10 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_bad_raw.json', true);
+            const attributesExample = utils.readExampleFile(
+                './test/activeAttributes/cayenneLpp_bad_raw_ttn.json',
+                true
+            );
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/lora_n_003/up', JSON.stringify(attributesExample));
             await utils.delay(500);
@@ -364,7 +369,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
                     'fiware-servicepath': subservice
                 }
             };
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp3.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_3.json');
             await iotagentLora.stop();
             await iotagentLora.start(iotAgentConfig);
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
@@ -422,7 +427,7 @@ describe('Device provisioning API: Provision devices (TTN)', function () {
                     'fiware-servicepath': subservice
                 }
             };
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_1.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/LORA-N-003/up', JSON.stringify(attributesExample));
             await utils.delay(500);

@@ -175,7 +175,7 @@ describe('Static provisioning (TTN)', function () {
 
         it('Should register correctly new devices for the type and process their active attributes', async function () {
             await iotagentLora.start(newConf);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_1.json');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(

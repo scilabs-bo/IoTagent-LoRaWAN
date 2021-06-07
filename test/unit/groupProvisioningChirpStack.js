@@ -92,7 +92,7 @@ describe('Configuration provisioning API: Provision groups (ChirpStack)', functi
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1ChirpStack.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provision_group_chirpStack.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -138,7 +138,7 @@ describe('Configuration provisioning API: Provision groups (ChirpStack)', functi
         });
 
         it('Should register correctly new devices for the group and process their active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_chirpStack_1.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -160,7 +160,7 @@ describe('Configuration provisioning API: Provision groups (ChirpStack)', functi
         });
 
         it('Should go on processing active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_chirpStack_1.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -212,7 +212,7 @@ describe('Configuration provisioning API: Provision groups (ChirpStack)', functi
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1ChirpStack.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provision_group_chirpStack.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -233,7 +233,7 @@ describe('Configuration provisioning API: Provision groups (ChirpStack)', functi
             };
             await iotagentLora.stop();
             await iotagentLora.start(iotAgentConfig);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack3.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_chirpStack_3.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(

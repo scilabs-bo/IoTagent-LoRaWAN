@@ -93,7 +93,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1TTN.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provision_group_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -139,7 +139,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
         });
 
         it('Should register correctly new devices for the group and process their active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_1.json');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -157,7 +157,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
         });
 
         it('Should go on processing active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp2.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_2.json');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -208,7 +208,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
                 iotAgentConfig.iota.server.port +
                 '/iot/services?resource=70B3D57ED000985F&apikey',
             method: 'PUT',
-            json: utils.readExampleFile('./test/groupProvisioning/updateGroup1TTN.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/update_group_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -250,7 +250,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
             response.body.services[0].attributes.should.have.length(6);
         });
         it('Should go on processing active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp2.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_2.json');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -272,7 +272,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1TTN.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provision_group_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -293,7 +293,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
             };
             await iotagentLora.stop();
             await iotagentLora.start(iotAgentConfig);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp3.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_3.json');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -315,7 +315,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1TTNCbor.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provision_group_cbor_ttn.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -370,7 +370,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
             };
 
             const encodedBuffer = CBOR.encode(rawJSONPayload);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/emptyCbor.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cbor_empty_raw_ttn.json');
             attributesExample.payload_raw = encodedBuffer.toString('base64');
             attributesExample.dev_id = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
@@ -435,7 +435,7 @@ describe('Configuration provisioning API: Provision groups (TTN)', function () {
                 },
                 throwHttpErrors: false
             };
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp_ttn_1.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish('ari_ioe_app_demo1/devices/LORA-N-005/up', JSON.stringify(attributesExample));
             await utils.delay(500);
