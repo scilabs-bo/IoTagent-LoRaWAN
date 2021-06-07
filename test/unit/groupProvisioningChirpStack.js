@@ -24,13 +24,13 @@
 const got = require('got');
 const iotAgentConfig = require('../config-test.js');
 const utils = require('../utils');
-const iotagentLora = require('../../');
+const iotagentLora = require('../../lib/iotagent-lora');
 const iotAgentLib = require('iotagent-node-lib');
 const mqtt = require('async-mqtt');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('Configuration provisioning API: Provision groups', function () {
+describe('Configuration provisioning API: Provision groups (ChirpStack)', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;
@@ -92,7 +92,7 @@ describe('Configuration provisioning API: Provision groups', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1LoRaServerIo.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1ChirpStack.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -138,7 +138,7 @@ describe('Configuration provisioning API: Provision groups', function () {
         });
 
         it('Should register correctly new devices for the group and process their active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -146,7 +146,7 @@ describe('Configuration provisioning API: Provision groups', function () {
                     options.json.services[0].internal_attributes.lorawan.application_id +
                     '/device/' +
                     attributesExample.devEUI +
-                    '/rx',
+                    '/event/up',
                 JSON.stringify(attributesExample)
             );
             await utils.delay(1000);
@@ -160,7 +160,7 @@ describe('Configuration provisioning API: Provision groups', function () {
         });
 
         it('Should go on processing active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -168,7 +168,7 @@ describe('Configuration provisioning API: Provision groups', function () {
                     options.json.services[0].internal_attributes.lorawan.application_id +
                     '/device/' +
                     attributesExample.devEUI +
-                    '/rx',
+                    '/event/up',
                 JSON.stringify(attributesExample)
             );
             await utils.delay(1000);
@@ -212,7 +212,7 @@ describe('Configuration provisioning API: Provision groups', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/services',
             method: 'POST',
-            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1LoRaServerIo.json'),
+            json: utils.readExampleFile('./test/groupProvisioning/provisionGroup1ChirpStack.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -233,7 +233,7 @@ describe('Configuration provisioning API: Provision groups', function () {
             };
             await iotagentLora.stop();
             await iotagentLora.start(iotAgentConfig);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo3.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack3.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
@@ -241,7 +241,7 @@ describe('Configuration provisioning API: Provision groups', function () {
                     options.json.services[0].internal_attributes.lorawan.application_id +
                     '/device/' +
                     attributesExample.devEUI +
-                    '/rx',
+                    '/event/up',
                 JSON.stringify(attributesExample)
             );
             await utils.delay(1000);

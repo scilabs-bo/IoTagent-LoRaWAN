@@ -30,7 +30,7 @@ const mqtt = require('async-mqtt');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('Device provisioning API: Provision devices', function () {
+describe('Device provisioning API: Provision devices (TTN)', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;

@@ -30,7 +30,7 @@ const mqtt = require('async-mqtt');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('CBOR Attributes', function () {
+describe('Application Server Decoding', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;

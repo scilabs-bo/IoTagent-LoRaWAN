@@ -31,7 +31,7 @@ const CBOR = require('cbor-sync');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('Configuration provisioning API: Provision groups', function () {
+describe('Configuration provisioning API: Provision groups (TTN)', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;

@@ -22,13 +22,13 @@
 const got = require('got');
 const iotAgentConfig = require('../config-test.js');
 const utils = require('../utils');
-const iotagentLora = require('../../');
+const iotagentLora = require('../../lib/iotagent-lora');
 const iotAgentLib = require('iotagent-node-lib');
 const mqtt = require('async-mqtt');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('Static provisioning', function () {
+describe('Static provisioning (ChirpStack < v3.11.0)', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;
@@ -173,7 +173,7 @@ describe('Static provisioning', function () {
 
         it('Should register correctly new devices for the type and process their active attributes', async function () {
             await iotagentLora.start(newConf);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
             attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(

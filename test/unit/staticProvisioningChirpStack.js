@@ -22,13 +22,13 @@
 const got = require('got');
 const iotAgentConfig = require('../config-test.js');
 const utils = require('../utils');
-const iotagentLora = require('../../');
+const iotagentLora = require('../../lib/iotagent-lora');
 const iotAgentLib = require('iotagent-node-lib');
 const mqtt = require('async-mqtt');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('Static provisioning (TTN)', function () {
+describe('Static provisioning (ChirpStack)', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;
@@ -140,12 +140,10 @@ describe('Static provisioning (TTN)', function () {
                     lorawan: {
                         application_server: {
                             host: 'localhost',
-                            username: 'ari_ioe_app_demo1',
-                            password: 'ttn-account-v2.UitfM5cPazqW52_zbtgUS6wM5vp1MeLC9Yu-Cozjfp0',
-                            provider: 'TTN'
+                            provider: 'loraserver.io'
                         },
                         app_eui: '70B3D57ED000985F',
-                        application_id: 'ari_ioe_app_demo1',
+                        application_id: '1',
                         application_key: '9BE6B8EF16415B5F6ED4FBEAFE695C49'
                     }
                 }
@@ -170,16 +168,20 @@ describe('Static provisioning (TTN)', function () {
 
             newConf.iota.types[type] = sensorType;
 
-            await iotagentLora.start.bind(iotagentLora, newConf)();
+            await iotagentLora.start(newConf);
         });
 
         it('Should register correctly new devices for the type and process their active attributes', async function () {
             await iotagentLora.start(newConf);
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLpp.json');
-            attributesExample.dev_id = devId;
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
+            attributesExample.deviceName = devId;
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
-                sensorType.internalAttributes.lorawan.application_id + '/devices/' + devId + '/up',
+                'application/' +
+                    sensorType.internalAttributes.lorawan.application_id +
+                    '/device/' +
+                    attributesExample.devEUI +
+                    '/event/up',
                 JSON.stringify(attributesExample)
             );
             await utils.delay(1000);
@@ -208,12 +210,10 @@ describe('Static provisioning (TTN)', function () {
                     lorawan: {
                         application_server: {
                             host: 'localhost',
-                            username: 'ari_ioe_app_demo1',
-                            password: 'ttn-account-v2.UitfM5cPazqW52_zbtgUS6wM5vp1MeLC9Yu-Cozjfp0',
-                            provider: 'TTN'
+                            provider: 'loraserver.io'
                         },
                         app_eui: '70B3D57ED000985F',
-                        application_id: 'ari_ioe_app_demo1',
+                        application_id: '1',
                         application_key: '9BE6B8EF16415B5F6ED4FBEAFE695C49'
                     }
                 }

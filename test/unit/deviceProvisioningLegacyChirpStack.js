@@ -24,13 +24,13 @@
 const got = require('got');
 const iotAgentConfig = require('../config-test.js');
 const utils = require('../utils');
-const iotagentLora = require('../../');
+const iotagentLora = require('../../lib/iotagent-lora');
 const iotAgentLib = require('iotagent-node-lib');
 const mqtt = require('async-mqtt');
 const { promisify } = require('util');
 require('chai/register-should');
 
-describe('Device provisioning API: Provision devices', function () {
+describe('Device provisioning API: Provision devices (ChirpStack < v3.11.0)', function () {
     let testMosquittoHost = 'localhost';
     let orionHost = iotAgentConfig.iota.contextBroker.host;
     let orionPort = iotAgentConfig.iota.contextBroker.port;
@@ -73,7 +73,7 @@ describe('Device provisioning API: Provision devices', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice1LoRaServerIo.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice1ChirpStack.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -124,7 +124,7 @@ describe('Device provisioning API: Provision devices', function () {
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
                 'application/' +
@@ -149,7 +149,7 @@ describe('Device provisioning API: Provision devices', function () {
         const options = {
             url: 'http://localhost:' + iotAgentConfig.iota.server.port + '/iot/devices',
             method: 'POST',
-            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice2LoRaServerIo.json'),
+            json: utils.readExampleFile('./test/deviceProvisioning/provisionDevice2ChirpStack.json'),
             responseType: 'json',
             headers: {
                 'fiware-service': service,
@@ -200,7 +200,7 @@ describe('Device provisioning API: Provision devices', function () {
         });
 
         it('Should process correctly active attributes', async function () {
-            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppLoRaServerIo2.json');
+            const attributesExample = utils.readExampleFile('./test/activeAttributes/cayenneLppChirpStack2.json');
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
             await client.publish(
                 'application/' +
@@ -232,7 +232,7 @@ describe('Device provisioning API: Provision devices', function () {
 
         it('Should process correctly active attributes', async function () {
             const attributesExample = utils.readExampleFile(
-                './test/activeAttributes/cayenneLpp_bad_rawLoRaServerIo.json',
+                './test/activeAttributes/cayenneLpp_bad_rawChirpStack.json',
                 true
             );
             const client = await mqtt.connectAsync('mqtt://' + testMosquittoHost);
