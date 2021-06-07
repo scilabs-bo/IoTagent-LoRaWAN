@@ -10,7 +10,8 @@
     "semi": [2, "always"],
     "indent": 0,
     "mocha/no-exclusive-tests": "error",
-    "space-before-function-paren": 0
+    "space-before-function-paren": 0,
+    "no-unused-vars": [ "error", { "argsIgnorePattern": "^_" } ]
   },
   "env": {
     "node": true,
